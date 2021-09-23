@@ -66,7 +66,7 @@ input, button, textarea {
 
 body {
     font-family: var(--notoSc);
-    background-color: #F4F4F4;
+    background-color: #DDDDDF;
     background-image: url(../imgs/bg-topo.jpg);
     background-repeat: no-repeat;
     background-position: center top;
@@ -145,13 +145,34 @@ a[target=_blank] {
 .list-menu {
     flex-direction: column;
     align-items: center;
-    max-width: 405px;
+    max-width: 440px;
     width: 90vw;
     height: auto;
-    max-height: calc(100vh - 50px);
+    max-height: calc(100vh - 150px);
     overflow-y: auto;
-    padding: 45px 0;
     margin: 0 auto;
+    padding: 45px 20px;
+}
+
+.list-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+.list-menu::-webkit-scrollbar-track {
+    background: #888;
+    border-radius: 5px;
+}
+
+/* Handle */
+.list-menu::-webkit-scrollbar-thumb {
+    background: var(--yellow);
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+.list-menu::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .list-menu li {
@@ -236,8 +257,10 @@ a[target=_blank] {
 
 /*============== CONTEUDO MAIN ==============*/
 .no-cover.bg-topo {
-    margin-top: -70px;
-    min-height: calc(100vh + 230px);
+    height: 100vh;
+    background-position: center top;
+    max-height: 900px;
+    min-height: auto;
 }
 
 .no-cover {
@@ -443,7 +466,7 @@ ul img {
 .cover-charges .wrapper-box {
     display: flex;
     max-width: 100%;
-    padding: 0 0 100vh;
+    padding: 0 0 30vh;
 }
 .cover-charges .content-box {
     background-color: transparent;
@@ -548,7 +571,7 @@ ul img {
 }
 
 .timeline .timeline-row:last-child:before {
-    height: 50%;
+    height: 60%;
 }
 
 /*============== CAPÍTULOS ==============*/
@@ -557,9 +580,27 @@ ul img {
     margin: 0 auto
 }
 
+.chapter-item figure {
+    overflow: hidden;
+}
+
+.chapter-item img, .chapter-item a {
+    transition: .3s;
+}
+
 .info-chapter a {
     font-size: 30px;
     text-decoration: underline;
+}
+
+.chapter-item:hover img,
+.chapter-item:hover a {
+    transform: scale(1.2);
+}
+
+.chapter-item:hover a {
+    text-decoration: underline;
+    color: var(--yellow)!important;
 }
 
 .info-chapter span {
@@ -583,7 +624,7 @@ ul img {
 .credits-section {
     background-color: var(--dark);
     color: var(--yellow);
-    padding-top: 40px;
+    padding-top: 70px;
 }
 
 /*============== ESPECIALISTAS ==============*/
@@ -625,12 +666,38 @@ ul img {
 
 
 .embed-podcast {
-    width: 60vw;
     display: none;
 }
 
+
+/*============== RODAPÉ ==============*/
+.footer span {
+    font-family: var(--roboto);
+    font-weight: 400;
+    color: #525252;
+}
+.footer-bg {
+    background-color: var(--dark);
+}
+.content-footer {
+    height: 90px;
+}
+.footer-bg span {
+    color: var(--yellow);
+}
+
 /*============== MEDIA QUERIE ==============*/
+@media screen and (min-width: 1520px), screen and (max-height: 700px) {
+    .no-cover.bg-topo {
+        background-size: contain;
+    }
+}
+
 @media (min-width: 992px) {
+    .no-cover.bg-topo {
+        margin-top: -70px;
+    }
+
     .navbar-menu {
         height: 70px;
     }
@@ -674,6 +741,11 @@ ul img {
         height: 290px;
     }
 
+    .embed-podcast {
+        width: 90vw;
+        max-width: 800px;
+    }
+
     .grafico1 {
         background-image: url('../imgs/graficos/desk/grafico1.png');
     }
@@ -712,6 +784,11 @@ ul img {
 }
 
 @media (max-width: 991px) {
+    .no-cover.bg-topo {
+        margin-top: -50px;
+        background-size: cover;
+    }
+
     .navbar-menu {
         height: 50px;
     }
@@ -749,6 +826,11 @@ ul img {
 
     .img-specialist {
         width: 215px;
+    }
+
+    .embed-podcast {
+        padding: 30px;
+        width: 100%;
     }
 
     .grafico1 {
@@ -822,5 +904,8 @@ ul img {
     }
     .cover-jornal {
         height: 244px;
+    }
+    .footer-bg span {
+        font-size: 12px;
     }
 }

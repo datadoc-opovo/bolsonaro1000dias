@@ -6,9 +6,12 @@ $(document).ready(function(){
         $('body').toggleClass('overflow-hidden')
     });
 
-    $('body').on('click', '.container-menu.open .list-menu a', function (e) {
+    $('body').on('click', '.list-menu a', function (e) {
     	$('body').toggleClass('overflow-hidden')
     	$(this).closest('.container-menu').removeClass('open')
+
+    	var currentLink = $(this).attr('data-href');
+    	$('html, body').animate({scrollTop: $(`#${currentLink}`).offset().top}, 800)
     });
 
 	// FIXAR BARRA MENU - SCROLL
@@ -26,11 +29,10 @@ $(document).ready(function(){
 			$('.container-menu').removeClass('fixed')
 		}
 
-		$('section').each(function(){
+		$('.section-parte').each(function(){
 			var sectionTop = $(this).offset().top;
 			if ( scrollWindow >= sectionTop - 100 ) {
 				var sectionCurrent = $(this).attr('id');
-				
 				$('.list-menu a').each(function(){
 					var menuCurrent = $(this).data('href');
 					if (menuCurrent === sectionCurrent ) {
@@ -41,11 +43,5 @@ $(document).ready(function(){
 			}
 		});
 	});
-
-	// $(".fancybox").fancybox({
- //        type: "iframe",
- //        width : 400, // or whatever
- //        height: 280
- //    }).trigger("click");
 
 });
