@@ -92,79 +92,105 @@
                         
                         <p>
                             Abaixo estão listados os gráficos apresentados no primeiro episódio da série, <a href="#">disponível aqui.</a>
-                            
+                            A medida que os novos episódios forem publicados, atualizaremos esta página com os respectivos materiais.
                         </p>
                        <hr>
-                        <h4>Viz 1 - <b>Número Cumulativo de pedidos de impeachment por presidente</b></h4>
+                       <h3>Ep1. Parte 2: </h3>
+                       <br>
+                        <h4><b>G1 - Número Cumulativo de pedidos de impeachment por presidente</b></h4>
+                        <br>
                             <p>
-                                Este gráfico foi desenvolvido a partir de uma tabela fornecida pela Câmara dos Deputados, contendo: 
+                                Este gráfico foi desenvolvido a partir de uma tabela fornecida pela <b>Câmara dos Deputados</b>, contendo: 
                                 A data do Pedido; A Legislatura e seu respectivo presidente; Ementa; Interessado; Situação; Data do Despacho; Publicação; e Recurso.           
-                                Novos campos foram inseridos e realizamos uma categorização dos pedidos. Mais informações podem ser observadas no notebook listado abaixo.
+                                Novos campos foram extraídos e/ou inseridos a partir do cruzamento com dados do período de governo desde a redemocratização. Além disso, realizamos uma categorização dos pedidos de impeachment.
+                            <br><br>
+                                Mais informações podem ser observadas no notebook desenvolvido para a análise e tratamento dos dados - <a href="/bolsonaro1000dias/notebooks/Pedidos de Impeachment.ipynb" target="_blank">disponível para download neste link</a>, ou diretamente na pasta <a href="https://github.com/datadoc-opovo/bolsonaro1000dias/notebooks/" target="_blank">notebooks</a> deste repositório no GitHub.
+                                <br>Uma versão online, na plataforma <i>Google Collab</i>, está <a href="https://colab.research.google.com/drive/1GQkNhmsO_HSFc8ONZVsYPt_XqZMjslYr?usp=sharing" target="_blank">disponível aqui</a>; 
+                                 
+                                <br><br>
+                                A tabela resultante da análise, utilizada para construção do gráfico, está disponível para download em formato <i>.csv </i>  
+                                <a href="/bolsonaro1000dias/bases_tratadas/pedidos_ate_1000dias.csv" target="_blank"> neste link</a>. 
+                                E uma versão alternativa do gráfico, na plataforma <i>Flourish</i>, está <a href="https://public.flourish.studio/visualisation/7214454/" target="_blank">disponível aqui</a>.
+                                
+                                
+                                <br><br> <b>Bases Originais:</b> 
+                                <br><a href="https://docs.google.com/spreadsheets/d/18D7-qjPtugYges3d6wawqdKTp0tZ123u/edit?usp=sharing&ouid=115605931414306260274&rtpof=true&sd=true" target="_blank">Quadro Geral de Denúncias contra ex-presidentes</a> e <a href="/bolsonaro1000dias/bases_originais/Pedidos de Impeachment Bolsonaro.csv" target="_blank">Denúncias contra Bolsonaro</a>
+                                <br>(Para facilitar, disponibilizamos o compilado de pedidos dos ex-presidentes em uma planilha aberta. Todavia, os arquivos em formato <i>.csv</i> utilizados nesta análise, separados por presidente, estão disponíveis na pasta deste repositório - <a href="/bolsonaro1000dias/notebooks/bases/pedidos_de_impeachment/" target="_blank">ou neste link</a>).
+                                
                             </p>
-                            <p>
-                                <a href="https://colab.research.google.com/drive/1GQkNhmsO_HSFc8ONZVsYPt_XqZMjslYr?usp=sharing" target="_blank">Notebook</a>; 
-                                <br><a href="/bolsonaro1000dias/bases_tratadas/pedidos_ate_1000dias.csv" target="_blank">Tabela utilizada no gráfico</a>;
-                                <br> Fontes originais: 
-                                <br><a href="https://docs.google.com/spreadsheets/d/18D7-qjPtugYges3d6wawqdKTp0tZ123u/edit?usp=sharing&ouid=115605931414306260274&rtpof=true&sd=true" target="_blank">Quadro Geral de Denúncias contra ex-presidentes</a>,
-                                <br><a href="/bolsonaro1000dias/bases_originais/Pedidos de Impeachment Bolsonaro.csv" target="_blank">Denúncias contra Bolsonaro</a>
-                            </p>
                         
-                        <h4>Viz 2 - <b>Número de Decretos até mil dias de cada governo</b></h4>
+                        <h4><b>G2 - Número de Decretos até mil dias de cada governo</b></h4>
+                        <br>
+                        <p>Este gráfico foi desenvolvido a partir da coleta de dados do  <a href="http://www4.planalto.gov.br/legislacao/portal-legis/legislacao-1/decretos1" target="_blank">portal oficial de decretos editados pelos presidentes da república</a>.
+                            A base de dados levantada contem o Ano, Nº do Decreto e Ementa. Novos campos, como a data e presidente em exercício de cada decreto, foram extraídos das colunas existentes ou inseridos a partir do cruzamento com dados do período de cada governo. 
+                            
+                            <br><br>
+                            O processo detalhado de análise e tratamento dos dados pode ser observado no notebook desenvolvido para esta finalidade - <a href="" target="_blank">disponível para download neste link</a>, ou diretamente na pasta <a href="https://github.com/datadoc-opovo/bolsonaro1000dias/notebooks/" target="_blank">notebooks</a> deste repositório no GitHub. 
+                            <br>Uma versão online, na plataforma <i>Google Collab</i>, está <a href="https://colab.research.google.com/drive/1GAdz9sgTSpnqmAR2Zj85d5Fb8h9m9kEl?usp=sharing" target="_blank">disponível aqui</a>; 
+                                
+                            <br><br>
+                            A tabela resultante da análise, utilizada para construção do gráfico, está disponível para download em formato <i>.csv </i>  
+                            <a href="/bolsonaro1000dias/bases_tratadas/decretos_por_gov_ate1000dias.csv" target="_blank"> neste link</a>. 
+                            <br><br>A base de dados completa, resultante da coleta na página oficial, pode ser acessada online <a href="https://docs.google.com/spreadsheets/d/12n_uvCDCDDctRO276TSneSOV4_qb2JjVWwHG9GNBCPM/edit?usp=sharing"  target="_blank">neste link</a> ou em formato <i>.csv</i> <a href="/bolsonaro1000dias/notebooks/bases/decretos_presidenciais.csv" target="_blank">neste link</a>.
+                                
                         
-                        <p>Este gráfico foi desenvolvido a partir da coleta de dados do portal oficial de decretos editados pelos presidentes da república, <a href="http://www4.planalto.gov.br/legislacao/portal-legis/legislacao-1/decretos1" target="_blank">disponível neste link</a>.
-                            A base de dados Levantada contem o Ano, Nº do Decreto e Ementa. Novos campos foram extraídos ou inseridos, como data e presidente em exercício, o que pode ser verificado no notebook listado abaixo. 
-                        </p>
-                       
-                        <p>
-                            <a href="https://colab.research.google.com/drive/1GAdz9sgTSpnqmAR2Zj85d5Fb8h9m9kEl?usp=sharing"  target="_blank">Notebook</a>;
-                            <br><a href="/bolsonaro1000dias/bases_tratadas/decretos_por_gov_ate1000dias.csv">Tabela utilizada no gráfico</a>;
-                            <br><a href="https://docs.google.com/spreadsheets/d/12n_uvCDCDDctRO276TSneSOV4_qb2JjVWwHG9GNBCPM/edit?usp=sharing"  target="_blank">Base de dados resultante da coleta na página oficial.</a>
                         </p>
                         
-                        <h4>Viz 3 - <b>Número de Medidas Provisórias até mil dias de cada governo</b></h4>
+                        <h4><b>G3 - Número de Medidas Provisórias até mil dias de cada governo</b></h4>
+                        <br>
                         <p>
-                            Este gráfico foi desenvolvido a partir da coleta de dados do portal oficial de Medidas Provisórias, 
-                            <a href="http://www4.planalto.gov.br/legislacao/portal-legis/legislacao-1/medidas-provisorias"  target="_blank">disponível neste link</a>.
-                            Novos campos foram extraídos ou inseridos, como data e presidente em exercício, o que pode ser verificado no notebook listado abaixo (É o mesmo notebook do gráfico anterior).
-                        </p>
-                                               
-                        <p>
-                            <a href="https://colab.research.google.com/drive/1GAdz9sgTSpnqmAR2Zj85d5Fb8h9m9kEl?usp=sharing" target="_blank">Notebook</a>;
-                            <br><a href="/bolsonaro1000dias/bases_tratadas/MP_por_gov_ate1000dias.csv">Tabela utilizada no gráfico</a>;
-                            <br><a href="https://docs.google.com/spreadsheets/d/1U8l-rkxJkVGLHT1_Uhe9AbPph8Ph-z8yQxv0uDSWggU/edit?usp=sharing"  target="_blank">Base de dados resultado da coleta na página oficial.</a></p>
-                        
-                        <h4>Viz 4 - <b>Crescimento da violência contra jornalistas e ataques à liberdade de imprensa entre 2019 e 2020 (FENAJ)</b></h4>
+                            Este gráfico foi desenvolvido a partir da coleta de dados do <a href="http://www4.planalto.gov.br/legislacao/portal-legis/legislacao-1/medidas-provisorias"  target="_blank">portal oficial de Medidas Provisórias</a>.
+                            A base de dados levantada contem o Nº da Medida, a Ementa e a Situação. Novos campos, como a data e presidente em exercício de cada decreto, foram extraídos das colunas existentes ou inseridos a partir do cruzamento com dados do período de cada governo..
+                            
+                            <br><br>
+                            O processo detalhado de análise e tratamento dos dados pode ser observado no notebook desenvolvido para esta finalidade - <a href="" target="_blank">disponível para download neste link</a>, ou diretamente na pasta <a href="https://github.com/datadoc-opovo/bolsonaro1000dias/notebooks/" target="_blank">notebooks</a> deste repositório no GitHub. 
+                            <br>Uma versão online, na plataforma <i>Google Collab</i>, está <a href="https://colab.research.google.com/drive/1GAdz9sgTSpnqmAR2Zj85d5Fb8h9m9kEl?usp=sharing" target="_blank">disponível aqui</a>; 
+                                
+                            <br><br>
+                            A tabela resultante da análise, utilizada para construção do gráfico, está disponível para download em formato <i>.csv </i>  
+                            <a href="/bolsonaro1000dias/bases_tratadas/MP_por_gov_ate1000dias.csv" target="_blank"> neste link</a>.
+                            
+                            <br><br>A base de dados completa, resultante da coleta na página oficial, pode ser acessada online <a href="https://docs.google.com/spreadsheets/d/1U8l-rkxJkVGLHT1_Uhe9AbPph8Ph-z8yQxv0uDSWggU/edit?usp=sharing"  target="_blank">neste link</a> ou em formato <i>.csv</i> <a href="/bolsonaro1000dias/notebooks/bases/medidas_provisorias.csv" target="_blank">neste link</a>.
+                                
+                           
+                        <hr>
+                        <h3>Ep1. Parte 3: </h3>
+                        <br>
+                        <h4>G4 - <b>Crescimento da violência contra jornalistas e ataques à liberdade de imprensa entre 2019 e 2020 (FENAJ)</b></h4>
+                        <br>
                         <p>Este gráfico foi desenvolvido a partir de informações coletadas nas edições 2019 e 2020 dos <b>Relatórios de Violência contra Jornalistas e Liberdade de Imprensa no Brasil</b>, da Federação Nacional dos Jornalistas - <b>FENAJ</b>.</p>
 
-                        <p><a href="https://fenaj.org.br/relatorios-de-violencia-contra-jornalistas-e-liberdade-de-imprensa-no-brasil/", target="_blank">Fonte Original</a></p>
+                        <p><a href="https://fenaj.org.br/relatorios-de-violencia-contra-jornalistas-e-liberdade-de-imprensa-no-brasil/", target="_blank">Fonte original disponível aqui</a>.</p>
                         
                         
-                        <h4>Viz 5 - <b>Principais Agressores à imprensa e à liberdade de expressão no primeiro semestre de 2021, segundo a Repórteres Sem Fronteira - RSF</b></h4>
+                        <h4>G5 - <b>Principais Agressores à imprensa e à liberdade de expressão no primeiro semestre de 2021, segundo a Repórteres Sem Fronteira - RSF</b></h4>
+                        <br>
                         <p>Este gráfico foi desenvolvido a partir de informações coletadas no material intitulado <b>"Imprensa brasileira, verdadeiro saco de pancadas da família Bolsonaro: uma tendência que se intensifica em 2021"</b>, da ong <a href="https://rsf.org/pt/apresentacao-0" target="_blank">Repórteres Sem Fronteira - <b>RSF</b></a>.</p>    
 
-                        <p><a href="https://rsf.org/pt/relacoes/imprensa-brasileira-verdadeiro-saco-de-pancadas-da-familia-bolsonaro-uma-tendencia-que-se" target="_blank">Fonte Original</a></p>
+                        <p><a href="https://rsf.org/pt/relacoes/imprensa-brasileira-verdadeiro-saco-de-pancadas-da-familia-bolsonaro-uma-tendencia-que-se" target="_blank">Fonte original disponível aqui</a>.</p>
                         
-                        <h4>Viz 6 - <b>Onde mais se cometeu ataques à liberdade de imprensa durante o governo Bolsonaro?</b> </h4>
-                        <p>Este gráfico foi desenvolvido a partir de uma base fornecida pela Associação Brasileira de Jornalismo Investigativo - <b>ABRAJI</b>. Entretanto, por conter dados sensíveis e envolver pessoas em situação de vulnerabilidade diante da violência contra a imprensa, o conjunto completo de dados é mantido sob sigilo.<br>Para mais informações, consulte diretamente a <a href="https://www.abraji.org.br/" target="_blank">ABRAJI</a>.</p>
+                        <h4>G6 - <b>Onde mais se cometeu ataques à liberdade de imprensa durante o governo Bolsonaro?</b> </h4>
+                        <br>
+                        <p>Este gráfico foi desenvolvido a partir de uma base fornecida pela Associação Brasileira de Jornalismo Investigativo - <b>ABRAJI</b>. 
+                            Entretanto, por conter dados sensíveis e envolver pessoas em situação de vulnerabilidade diante da violência contra a imprensa, o conjunto completo de dados é mantido sob sigilo.
+                            <br><br>Para mais informações, consulte diretamente a <a href="https://www.abraji.org.br/" target="_blank">ABRAJI</a>.</p>
                         
-
-                        <h4>Viz 7 - <b>Registros de posse de armas de fogo entre 2017 e 2020 no Brasil</b></h4>
-                        
-                        <h4>Viz 8 - <b>Registros de posse de armas de fogo por estado</b></h4>
-                       
-                        <h4>Viz 9 - <b>Onde mais cresceu a posse de armas de fogo entre 2017 e 2020? </b></h4>
+                        <hr>
+                        <h3>Ep1. Parte 4: </h3>
+                        <br>
+                        <h4>G7 - <b>Registros de posse de armas de fogo entre 2017 e 2020 no Brasil</b>, G8 - <b>Registros de posse de armas de fogo por estado</b> e G9 - <b>Onde mais cresceu a posse de armas de fogo entre 2017 e 2020.</b></h4>
+                        <br>
                         <p>
                             Os gráficos 7, 8 e 9 foram desenvolvidos a partir do Anuário Brasileiro de Segurança Pública 2021, que é elaborado pelo Fórum Brasileiro de Segurança Pública -<b>FBSP</b>.
                             <br><br>Exploramos a tabela 48 do anuário - <b>Registros de arma de fogo ativos no SINARM/Polícia Federal, ns. Absolutos</b>, agrupando os valores dos estados por região no gráfico 7. 
                         </p>
                         <p>
-                            <a href="https://forumseguranca.org.br/anuario-brasileiro-seguranca-publica/" target="_blank">Anuário Completo</a>;
-                            <br><a href="/bolsonaro1000dias/bases_tratadas/tabela48-Anuario2021-FNSP.csv">Recorte utilizado nos gráficos</a>
+                            O Anuário completo, disponibilizado pelo FBSP, pode ser encontrando <a href="https://forumseguranca.org.br/anuario-brasileiro-seguranca-publica/" target="_blank">neste link</a>.
+                            E o recorte utilizado para construção dos gráficos está disponível para download em formato <i>.csv</i> <a href="/bolsonaro1000dias/bases_tratadas/tabela48-Anuario2021-FNSP.csv">neste link</a>.
                         </p>
                         
                         <hr>
-                        <p>A medida que os novos episódios forem publicados, atualizaremos esta página com os respectivos materiais.</p>
-                    </div>
+                     </div>
     			</div>
     		</div>
         </div>
