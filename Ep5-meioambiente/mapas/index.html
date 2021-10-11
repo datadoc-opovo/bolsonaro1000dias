@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Desmatamento da Caatinga sob Bolsonaro</title>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+   <!-- Make sure you put this AFTER Leaflet's CSS -->
+   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+
+
+   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+   <script src="js/crossfilter.js" charset="utf-8"></script>
+    <script src="js/dc.js" charset="utf-8"></script>
+
+	<style>
+			#map {
+				width: 800px;
+				height: 650px;
+                border-radius: 25px;
+			}
+			.info {
+				padding: 6px 8px;
+				font: 14px/16px Arial, Helvetica, sans-serif;
+				background: white;
+				background: rgba(255,255,255,0.8);
+				box-shadow: 0 0 15px rgba(0,0,0,0.2);
+				border-radius: 5px;
+			}
+			.info h4 {
+				margin: 0 0 5px;
+				color: rgb(65, 65, 65);
+			}
+
+			.legend {
+				text-align: left;
+				line-height: 18px;
+				color: #555;
+			}
+			.legend i {
+				width: 18px;
+				height: 18px;
+				float: left;
+				margin-right: 8px;
+				opacity: 0.7;
+			}
+
+			.dc-chart g.axis text{
+			fill: black;
+			font: 14px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		.btn{
+			fill: black;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+
+		.dc-chart text.pie-slice{
+			fill: black;
+			font: 16px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		
+		.dc-chart g.row text {
+			fill: black;
+			font-family: var(--noto);
+			font-size: 14px;
+			font-weight: bold;
+		}
+		.dc-chart g.dc-legend-item text{
+			fill: black;
+			font: 14px/14px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	
+    <h4>A área desmatamenta da Caatinga no Brasil entre 01/2019 e 10/2021 sobre Fortaleza</h4>
+	
+    <div id="map">
+    </div>
+    <p>Fonte: Levantamento do DATADOC com base nos dados do MapBiomas e IBGE.</p>
+<script type="text/javascript" src="data/bairrosFortalJson.js"></script>
+<script type="text/javascript" src="data/fortaleza.js"></script>
+<script type="text/javascript">
+    
+    centro_fortaleza = [-3.8,-38.55];
+    centro_map = [-3.84,-38.61];
+
+
+	let map = L.map('map').setView(centro_map, 11);
+	map.scrollWheelZoom.disable();
+    
+    L.tileLayer("https://api.mapbox.com/styles/v1/cajazeiraramos/ckumpu6dj64gv19mw3es52qwo/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FqYXplaXJhcmFtb3MiLCJhIjoiY2t1aWhlNGxlMHM1ZTJwbXg1NTl0eGFnYiJ9.fsmTcPSR244LBSvdDLVlTA",
+	{ 
+        // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+        maxZoom: 18
+    }).addTo(map);
+	
+	
+    
+    function style(feature) {
+		return {
+			weight: 1,
+			opacity: 1,
+			color: '#998ec3',
+			dashArray: '3',
+			fillOpacity: 0.4,
+		};
+	}
+
+	var InfoIcon = new L.Icon({
+	iconUrl: 'https://img.icons8.com/doodle/96/000000/information.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [80, 80],
+    iconAnchor: [80, 80],
+    popupAnchor: [-20, -80],
+    shadowSize: [80, 80]
+    });
+
+
+    var orangeIcon = new L.Icon({
+	iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+    });
+
+
+	popup = '<h4>O desmatamento da Caatinga sob Bolsonaro é equivalente a <b>3,74 vezes</b> a área total de <b>Fortaleza</b>, ou um círculo com <b>38,5km</b> de diâmetro sobre a cidade.</h4>'
+	
+    L.circle(centro_fortaleza, {radius: 19277,color:'#d95f0e', fillOpacity:0.3}).addTo(map);
+    L.marker(centro_fortaleza, {icon: orangeIcon}).addTo(map)
+	.bindPopup(popup);
+	// .openPopup();
+
+	L.marker([-3.93,-38.75], {icon: InfoIcon}).addTo(map)
+    .bindPopup(popup);
+	
+
+
+	geojson = L.geoJson(fortaleza, {
+		style: style,
+	}).addTo(map);
+
+	let plot = L.control({position: 'bottomleft'});
+
+	plot.onAdd = function (map) {
+		let div = L.DomUtil.create('div', 'info');
+
+		div.innerHTML = ''
+		// + '<h4>Desmatamento da Caatinga</h4>'
+            +'<div id="dc_chart"></div>'
+			
+		return div;
+	};
+
+	// <img src="https://img.icons8.com/doodle/96/000000/information.png"/> 
+
+	plot.addTo(map);
+
+
+	var chart = new dc.rowChart("#dc_chart");
+    
+    d3.csv("data/desmatamento_resumo.csv", function(data){
+		data.forEach(function(d) {
+			console.log(d);
+			d.nome = d.Nome;
+			d.qtd = d.Qtd;		
+
+		});
+		var facts = crossfilter(data);
+			var dimNome = facts.dimension(function(d){
+			return d.nome;});
+			var grupo = dimNome.group().reduceSum(function(d){
+				return d.qtd;
+			});
+
+			colors = d3.scale.ordinal()
+				.domain(["Fortaleza", "Desmatamento sob Bolsonaro"])
+				.range(['#998ec3','#f1a340']);
+				// #998ec3
+			chart
+			.width(350)
+			.height(120)
+			.margins({left: 10, top: 10, right: 10, bottom: 20})
+			.elasticX(true)
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.title(function(d){
+				return d.value + ' km²';
+			})
+			.colors(colors)
+			.dimension(dimNome)
+			.group(grupo)
+			.ordering(function(d) { return -d.value })
+			.xAxis().ticks(3);
+
+			dc.renderAll();
+	});
+
+</script>
+
+</body>
+</html>

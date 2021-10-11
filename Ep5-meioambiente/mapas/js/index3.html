@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.doc/OPovo - Explorando Dados da Cultura</title>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" href="css/dc.css">
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+   	<script src="js/crossfilter.js" charset="utf-8"></script>
+   	<script src="js/dc.js" charset="utf-8"></script>
+
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="icon" href="https://yt3.ggpht.com/ytc/AAUvwniBqGmJubYSj-rjkhRMVK9svDC9HCDkzmAhL7JqATo=s900-c-k-c0x00ffffff-no-rj">
+
+	
+
+
+
+</head>
+<body>
+	
+	<h1> Explorando Dados da Cultura (Data.doc / OPovo)</h1>
+	
+<script type="text/javascript">   
+
+	chart1 = new dc.barChart("#chart1");
+   	chart2 = new dc.barChart("#chart2");
+	chart3 = new dc.rowChart("#chart3");
+   	chart4 = new dc.barChart("#chart4");
+	chart5 = new dc.rowChart("#chart5");
+	chart6 = new dc.rowChart("#chart6");
+   	chart7 = new dc.lineChart("#chart7");
+	dataTable = dc.dataTable("#table");
+
+	d3.csv("data/dadosSIOPtratados.csv", function(data){
+        var dtgFormat = d3.time.format.utc("%Y");
+		data.forEach(function(d) {
+            d.ano = parseInt(d.Ano);
+			// d.ano_formatado = dtgFormat.parse(d.Ano);
+			// d.ano_formatado = d3.time.year.offset(d.ano_formatado, 1)
+			d.subFuncao = d.Subfunção;
+			d.modalidade = d.Modalidade_de_Aplicação;
+			d.empenhado = parseFloat(d.Empenhado);
+			d.liquidado = parseFloat(d.Liquidado);
+			d.unidadeOrcamentaria = d.Unidade_Orçamentária;
+			d.pago = parseFloat(d.Pago);
+			d.dotInicial = parseFloat(d.Dotação_Inicial);
+			d.dotAtual = parseFloat(d.Dotação_Atual);
+        });
+		
+		var facts = crossfilter(data);
+
+		ano_unidade_dimension = facts.dimension(function(d){return [d.ano, d.unidadeOrcamentaria]}, true);
+		pago_group2 =  ano_unidade_dimension.group();
+
+		ano_dimension = facts.dimension(function(d){return d.ano;});
+		subFuncao_dimension = facts.dimension(function(d){return d.subFuncao;});
+		modalidade_dimension = facts.dimension(function(d){return d.modalidade;});
+		dimension_unidade = facts.dimension(function(d){return d.unidadeOrcamentaria;})
+		
+		dimension = facts.dimension(function(d){return d.ano;});
+		const group = dimension
+            .group()
+                .reduce((p, v) => {
+                    p[v.unidadeOrcamentaria] = (p[v.unidadeOrcamentaria] || 0) + v.pago;
+                    p[v.modalidade] = (p[v.modalidade] || 0) + v.pago;
+                    p[v.subFuncao] = (p[v.subFuncao] || 0) + v.pago;
+                    return p;
+                }, (p, v) => {
+                    p[v.unidadeOrcamentaria] = (p[v.unidadeOrcamentaria] || 0) - v.pago;
+					p[v.modalidade] = (p[v.modalidade] || 0) - v.pago;
+                    p[v.subFuncao] = (p[v.subFuncao] || 0) - v.pago;
+                    return p;
+                }, () => ({}));	
+        
+        function sel_stack (i) {
+			return function(d){
+				if(d.value[i] == undefined)
+					d.value[i] = 0;
+				return d.value[i];
+			}
+        }
+		
+		pago_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.pago;});
+
+		liquidado_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.liquidado;});
+		
+		empenhado_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.empenhado;});
+
+		dot_inicial_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.dotInicial;});
+		dot_atual_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.dotAtual;});
+
+		pago_group_subF = subFuncao_dimension.group()
+			.reduceSum(function(d){
+				return d.pago;});
+
+		pago_group_modalidade = modalidade_dimension.group()
+			.reduceSum(function(d){
+				return d.pago;});
+
+		pago_group_unidade = dimension_unidade.group()
+			.reduceSum(function(d){
+				return d.pago;});
+		
+		// list_of_colors = ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462','#b3de69','#fccde5','#d9d9d9',]
+		list_of_colors = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'];
+		list_of_colorsv2 = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f','#e5c494'];
+		
+		cores_por_unidade = d3.scale.ordinal()
+			    .domain(["Administração Direta","Agência Nacional do Cinema",
+						"Fundação Biblioteca Nacional","Fundação Cultural Palmares","Fundação Nacional de Artes",
+						"Fundo Nacional de Cultura","Instituto Brasileiro de Museus","IPHAN","Outros"])
+			    .range(list_of_colors)
+
+		cores_por_subfuncao = d3.scale.ordinal()
+			.domain(["392 - Difusão Cultural","122 - Administração Geral",
+					"391 - Patrimônio Histórico, Artístico e Arqueológico","128 - Formação de Recursos Humanos","331 - Proteção e Benefícios ao Trabalhador",
+					"301 - Atenção Básica","125 - Normatização e Fiscalização"])
+			.range(list_of_colors)	
+			
+		var target = document.getElementById('target')
+		max_width = target.offsetWidth;
+
+		colors = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854'];
+		// if(max_width < 800)
+
+		chart1
+			.width(max_width)
+			.height(500)
+			.dimension(ano_dimension)
+			.alwaysUseRounding(true)        
+			// .x(d3.time.scale().domain([dtgFormat.parse("1999"), maxDate]))
+			// .xUnits(d3.time.years)
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.x(d3.scale.ordinal().domain(ano_dimension)) 
+			.xUnits(dc.units.ordinal)
+			.margins({left: 100, top: 40, right: 80, bottom: 100})
+			.elasticY(true)
+			.title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value.toLocaleString("pt-BR")+',00';;
+            })
+			.colors(d3.scale.ordinal().range(colors))
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.elasticY(true)
+			.renderType('group')
+			.group(pago_group, "Pago")
+			.stack(liquidado_group, "Liquidado")
+			.stack(empenhado_group, "Empenhado")
+			.stack(dot_inicial_group, "Dotação Inicial")
+			.stack(dot_atual_group, "Dotação Final")		
+			.on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,10) rotate(-35)')});			
+		
+		chart2
+            .width(max_width)
+            .height(500)
+			.margins({left: 100, top: 40, right: 230, bottom: 80})
+            .legend(dc.legend().x(max_width-230).y(50).itemHeight(20).gap(5)) 
+            .clipPadding(10)
+			.elasticY(true)
+            .x(d3.scale.ordinal().domain(dimension)) // Need the empty val to offset the first value
+			.xUnits(dc.units.ordinal)
+			.title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value[this.layer].toLocaleString("pt-BR")+',00';;
+            })
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.colors(cores_por_unidade)
+			.dimension(dimension)           
+            .group(group, "Administração Direta", sel_stack('Administração Direta'))
+            .stack(group, "Agência Nacional do Cinema", sel_stack('Agência Nacional do Cinema'))
+            .stack(group, "Fundação Biblioteca Nacional", sel_stack('Fundação Biblioteca Nacional'))
+            .stack(group, "Fundação Casa de Rui Barbosa", sel_stack('Fundação Casa de Rui Barbosa'))
+            .stack(group, "Fundação Cultural Palmares", sel_stack('Fundação Cultural Palmares'))
+            .stack(group, "Fundação Nacional de Artes", sel_stack('Fundação Nacional de Artes'))
+            .stack(group, "Fundo Nacional de Cultura", sel_stack('Fundo Nacional de Cultura'))
+			.stack(group, "Instituto Brasileiro de Museus", sel_stack('Instituto Brasileiro de Museus'))
+            .stack(group, "IPHAN", sel_stack('IPHAN'))
+			.stack(group, "Outros", sel_stack('Outros'))
+			.on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,10) rotate(-35)')});								
+	
+			
+		chart3
+			.width(max_width)
+			.height(600)
+			.margins({left: 10, top: 20, right: 80, bottom: 60})
+			.x(d3.scale.linear().domain([0,50000]))
+			.elasticX(true)
+			.title(function(d){
+				return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+
+			.colors(cores_por_unidade)
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(dimension_unidade)
+			.group(pago_group_unidade)
+			.rowsCap(10)
+			.ordering(function(d) { return -d.value });
+
+
+		chart4
+			.width(max_width)
+            .height(500)
+			.margins({left: 100, top: 40, right: 230, bottom: 80})
+            .legend(dc.legend().x(max_width-230).y(50).itemHeight(20).gap(5)) 
+            .x(d3.scale.ordinal().domain(dimension))
+			.xUnits(dc.units.ordinal)
+            .clipPadding(10)
+			.elasticY(true)
+            .title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value[this.layer].toLocaleString("pt-BR")+',00';;
+            })
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.colors(cores_por_subfuncao)
+			.dimension(dimension)           
+            .group(group, "392 - Difusão Cultural", sel_stack('392 - Difusão Cultural'))
+            .stack(group, "122 - Administração Geral", sel_stack('122 - Administração Geral'))
+            .stack(group, "391 - Patrimônio Histórico, Artístico e Arqueológico", sel_stack('391 - Patrimônio Histórico, Artístico e Arqueológico'))
+            .stack(group, "128 - Formação de Recursos Humanos", sel_stack('128 - Formação de Recursos Humanos'))
+            .stack(group, "331 - Proteção e Benefícios ao Trabalhador", sel_stack('331 - Proteção e Benefícios ao Trabalhador'))
+            .stack(group, "301 - Atenção Básica", sel_stack('301 - Atenção Básica'))
+            .stack(group, "125 - Normatização e Fiscalização", sel_stack('125 - Normatização e Fiscalização'))
+			.on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,10) rotate(-35)')});	
+            
+
+		chart5
+			.width(max_width)
+			.height(600)
+			.margins({left: 10, top: 20, right: 80, bottom: 60})
+			.x(d3.scale.linear().domain([0,50000]))
+			.elasticX(true)
+			.title(function(d){
+				return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+			.colors(cores_por_subfuncao)
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(subFuncao_dimension)
+			.group(pago_group_subF)
+			.rowsCap(10)
+			// .labelOffsetX(-200)
+			.ordering(function(d) { return -d.value });
+
+
+		chart6
+			.width(max_width)
+			.height(600)
+			.margins({left: 10, top: 40, right: 80, bottom: 60})
+			.x(d3.scale.linear().domain([0,50000]))
+			.elasticX(true)
+			.title(function(d){
+				return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(modalidade_dimension)
+			.group(pago_group_modalidade)
+			.rowsCap(5)
+			.ordering(function(d) { return -d.value });
+
+		chart7
+			.width(max_width)
+			.height(500)
+			// .x(d3.time.scale().domain([dtgFormat.parse("2000"), dtgFormat.parse("2021")]))
+			// .xUnits(d3.time.years)	
+			.x(d3.scale.ordinal().domain(ano_dimension)) // Need the empty val to offset the first value
+			.xUnits(dc.units.ordinal)
+			.margins({left: 80, top: 10, right: 80, bottom: 60})
+			.elasticY(true)	
+			// .yAxisLabel("The Y Axis")
+			.legend(dc.legend().x(100).y(50).itemHeight(20).gap(5))
+			.renderHorizontalGridLines(true)
+			.brushOn(true)
+			.dimension(ano_dimension)		
+			.group(pago_group, "Pago")		
+			.stack(liquidado_group, "Liquidado")
+			.renderArea(true)
+			.stack(empenhado_group, "Empenhado");
+		
+
+
+		dataTable
+			.width(max_width)
+            .height(800)
+            .dimension(ano_dimension)
+            .group(function(d) {
+                return "Tebalea de dados";
+            })
+            .size(20)
+            .columns([
+                    function(d) { return d.ano; },                    
+                    function (d) { return d.unidadeOrcamentaria; },
+                    function (d) { return d.subFuncao; },
+                    function (d) { return d.modalidade; },
+					function (d) { return d.empenhado; },
+                    function (d) {return d.liquidado; },
+                    function (d) {return d.pago; }					
+					
+				])
+            .sortBy(function(d) { return d.pago; })
+            .order(d3.ascending);
+
+
+		dc.renderAll();
+		
+	});			
+	
+
+</script>
+
+
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- Latest compiled and minified JavaScript -->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>
