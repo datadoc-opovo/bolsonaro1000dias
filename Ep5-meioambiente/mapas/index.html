@@ -24,6 +24,7 @@
 				width: 750px;
 				height: 650px;
                 border-radius: 25px;
+				margin-left: 20px;
 			}
 			.info {
 				padding: 6px 8px;
@@ -83,7 +84,7 @@
 </head>
 <body>
 	
-    <h4>A área desmatamenta da Caatinga no Brasil entre 01/2019 e 10/2021 sobre Fortaleza</h4>
+    <h4>A área desmatamenta da Caatinga no Brasil, entre 01/2019 e 06/2021, sobre Fortaleza</h4>
 	
     <div id="map">
     </div>
@@ -96,7 +97,7 @@
     centro_map = [-3.84,-38.61];
 
 
-	let map = L.map('map').setView(centro_map, 11);
+	let map = L.map('map',{ dragging: !L.Browser.mobile, tap: !L.Browser.mobile }).setView(centro_map, 11);
 	map.scrollWheelZoom.disable();
     
     L.tileLayer("https://api.mapbox.com/styles/v1/cajazeiraramos/ckumpu6dj64gv19mw3es52qwo/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FqYXplaXJhcmFtb3MiLCJhIjoiY2t1aWhlNGxlMHM1ZTJwbXg1NTl0eGFnYiJ9.fsmTcPSR244LBSvdDLVlTA",
@@ -144,7 +145,7 @@
 	.bindPopup(popup);
 	// .openPopup();
 
-	L.marker([-3.93,-38.75], {icon: InfoIcon}).addTo(map)
+	L.marker([-3.93,-38.73], {icon: InfoIcon}).addTo(map)
     .bindPopup(popup);
 	
 

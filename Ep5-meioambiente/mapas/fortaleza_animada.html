@@ -71,7 +71,7 @@
     centro_fortaleza = [-3.78,-38.52668];
 
    
-	let map = L.map('map',{zoomControl: false }).setView(centro_fortaleza, 12);
+	let map = L.map('map',{ dragging: !L.Browser.mobile, tap: !L.Browser.mobile , zoomControl: false }).setView(centro_fortaleza, 12);
 	map.scrollWheelZoom.disable();
     map.touchZoom.disable();
     map.doubleClickZoom.disable();
