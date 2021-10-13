@@ -67,26 +67,29 @@
 <script type="text/javascript" src="data/bairrosFortalJson.js"></script>
 <script type="text/javascript" src="data/fortaleza.js"></script>
 <script type="text/javascript">
-	
+    
+    var svg,g;  
     centro_fortaleza = [-3.78,-38.52668];
 
    
-	let map = L.map('map',{ dragging: !L.Browser.mobile, tap: !L.Browser.mobile , zoomControl: false }).setView(centro_fortaleza, 12);
-	map.scrollWheelZoom.disable();
-    map.touchZoom.disable();
-    map.doubleClickZoom.disable();
-    map.scrollWheelZoom.disable();
-    map.boxZoom.disable();
-    map.keyboard.disable();
+	let map = L.map('map',{ dragging: !L.Browser.mobile, tap: !L.Browser.mobile  }).setView(centro_fortaleza, 12);
+	// map.scrollWheelZoom.disable();
+    // map.touchZoom.disable();
+    // map.doubleClickZoom.disable();
+    // map.scrollWheelZoom.disable();
+    // map.boxZoom.disable();
+    // map.keyboard.disable();
 	
     L.tileLayer("https://api.mapbox.com/styles/v1/cajazeiraramos/ckumpu6dj64gv19mw3es52qwo/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiY2FqYXplaXJhcmFtb3MiLCJhIjoiY2t1aWhlNGxlMHM1ZTJwbXg1NTl0eGFnYiJ9.fsmTcPSR244LBSvdDLVlTA",
-	{ 
-        
-        
-    }).addTo(map);
+	{ }).addTo(map);
 
-	 
+    svg = d3.select(map.getPanes().overlayPane).append("svg");
+    g = svg.append("g").attr("class", "leaflet-zoom-hide");
     
+    // map.on("moveend", reset_animation);
+    map.on("zoomend", reset_zoom);
+
+
     // <img src="https://img.icons8.com/doodle/48/000000/play-button-circled.png"/>
     var orangeIcon = new L.Icon({
     iconUrl: 'https://img.icons8.com/doodle/48/000000/play-button-circled.png',
@@ -113,59 +116,40 @@
     })
 
     
-    let plot = L.control({position: 'topleft'});
+    let plot = L.control({position: 'topright'});
 
     plot.onAdd = function (map) {
         let div = L.DomUtil.create('div', 'info');
 
         div.innerHTML = '<h4>No atual ritmo de <b>desmatamento da Caatinga</b> <small>(38,7 km²/mês)</small>,'
             +'<br><b>Fortaleza</b> <small>(312km²)</small> seria <b>consumida em apenas 8 meses</b>.'
-            // +'<br>Clique no marcador para visualizar.'
             +'</h4>'
-        //   <small>(38,7 km²/mês)</small>  
-            //  <small>(312km²)</small>
+
+            +'<h3><b><div class="counter" data-target="8"></div></b></h3>'
         return div;
     };
 
-
-
     
-    let legend = L.control({position: 'bottomright'});
+    // let legend = L.control({position: 'topleft'});
 
-    legend.onAdd = function (map) {
-        let div = L.DomUtil.create('div', 'info legend');
+    // legend.onAdd = function (map) {
+    //     let div = L.DomUtil.create('div', 'info legend');
 
-        div.innerHTML = ''
-        +'<h2><b><div class="counter" data-target="8"></div></b></h2>'
-            // +'<h4>meses</h4>'
-            ;
-        return div;
-    };
-    legend.addTo(map);
+    //     div.innerHTML = ''
+    //     +'<h2><b><div class="counter" data-target="8"></div></b></h2>'
+    //         // +'<h4>meses</h4>'
+    //         ;
+    //     return div;
+    // };
+   
     
-
-    let transicoes = [];
-
-    for(var i=0; i<bairrosData.features.length; i++){
-        shape_bairro = bairrosData.features[i].geometry.coordinates;
-        var c = turf.centerOfMass(turf.polygon(shape_bairro)).geometry.coordinates;
-		
-        var p1 = projectPoly([[c]]);
-	    var p2 = projectPoly(shape_bairro);
-        
-        transicoes.push(flubber.interpolate(p1, p2));
-	}
-    
-    map.on('viewreset', function(d){
-        d3.selectAll('svg').remove();
-    })
-
     icon = '<img src="https://img.icons8.com/ios-filled/50/000000/circled-play.png"/>';
     
-    let replay_info = L.control({position: 'topright'});
+    let replay_info = L.control({position: 'bottomleft'});
 
     
     img_source = '<img src="https://img.icons8.com/ios/50/000000/memories.png"/>'
+    
     replay_info.onAdd = function (map) {
             let div = L.DomUtil.create('div', 'info');
 
@@ -176,23 +160,39 @@
             
             return div;
         };
-
-    
-    
+        
+    function reset_zoom(){
+        d3.selectAll('svg').remove();
+        marker.addTo(map);
+        var cnt = d3.select(".counter");
+        cnt.selectAll(".txt").remove();
+    }
     
     function anima(){
 
         plot.addTo(map);
         replay_info.addTo(map);
-    
+
         d3.selectAll('svg').remove()
-        var svg = d3.select(map.getPanes().overlayPane)
-            .append("svg")
-            .attr("width", '800px')
-            .attr("height", '700px'),
+        
+        svg = d3.select(map.getPanes().overlayPane).append("svg");
         g = svg.append("g").attr("class", "leaflet-zoom-hide");
-       
-        var paths = g.selectAll("path")  
+
+        var mapBound = map.getBounds();
+
+        var NE = map.latLngToLayerPoint(mapBound._northEast), SW = map.latLngToLayerPoint(mapBound._southWest);
+
+        var topLeft = [SW.x,NE.y];
+
+        svg.attr("width", NE.x-SW.x)
+            .attr("height", SW.y-NE.y)
+            .style("left", topLeft[0] + "px")
+            .style("top", topLeft[1] + "px");
+
+        let transicoes = Interpolacao();
+
+        var paths = svg
+            .selectAll("path")
             .data(transicoes)
             .enter()
             .append("path")
@@ -203,7 +203,7 @@
 
         paths
             .transition()
-            .duration(12000)
+            .duration(11000)
             .attrTween("d", function(d) {
                 return d;
             })
@@ -211,9 +211,27 @@
                 return !i;
             });
         
-        // paths.addTo(map);
+            
+        Contador();
+        // reset_animation();
+    }
 
-       
+    function Interpolacao(){
+        let transicoes = [];
+
+        for(var i=0; i<bairrosData.features.length; i++){
+            shape_bairro = bairrosData.features[i].geometry.coordinates;
+            var c = turf.centerOfMass(turf.polygon(shape_bairro)).geometry.coordinates;
+            
+            var p1 = projectPoly([[c]]);
+            var p2 = projectPoly(shape_bairro);
+
+            transicoes.push(flubber.interpolate(p1, p2));
+        }
+        return transicoes;
+    }
+
+    function Contador(){
         var cnt = d3.select(".counter");
         cnt.selectAll(".txt").remove();
 
@@ -226,7 +244,7 @@
             .attr("x", 20)
             .attr("y", 80)
             .transition()
-            .duration(12000)
+            .duration(11000)
             .tween("textTween", function(d) {
                 var i = d3.interpolate(0, d);                    
                 return function(t) {
@@ -234,17 +252,16 @@
                     novo = Math.round(i(t));
 
                     if(novo == 0)
-                        cnt.selectAll(".txt").text(novo);
+                        cnt.selectAll(".txt").text('Tempo: '+novo);
                     else if(novo == 1)
-                        cnt.selectAll(".txt").text(novo + ' Mês');
+                        cnt.selectAll(".txt").text('Tempo: '+novo + ' Mês');
                     else
-                    cnt.selectAll(".txt").text(novo + ' Meses');
+                    cnt.selectAll(".txt").text('Tempo: '+novo + ' Meses');
                 }
 
             });
-
     }
-
+    
     function myprojection(x, y) {
         var point = map.latLngToContainerPoint(new L.LatLng(y, x));
         // console.log(point);
@@ -261,6 +278,7 @@
         }
         return projected;
     }
+
 
 </script>
 
